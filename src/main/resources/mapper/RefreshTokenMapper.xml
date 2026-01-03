@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.jwat_g.mapper.RefreshTokenMapper">
+
+    <resultMap id="RefreshTokenResultMap" type="com.example.jwat_g.model.RefreshToken">
+        <id property="id" column="id"/>
+        <result property="accountId" column="account_id"/>
+        <result property="token" column="token"/>
+        <result property="expiryDate" column="expiry_date"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO refresh_tokens (account_id, token, expiry_date, created_at)
+        VALUES (#{accountId}, #{token}, #{expiryDate}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <select id="findByToken" resultMap="RefreshTokenResultMap">
+        SELECT * FROM refresh_tokens WHERE token = #{token}
+    </select>
+
+    <delete id="deleteByAccountId">
+        DELETE FROM refresh_tokens WHERE account_id = #{accountId}
+    </delete>
+
+    <delete id="deleteByToken">
+        DELETE FROM refresh_tokens WHERE token = #{token}
+    </delete>
+
+    <delete id="deleteExpiredTokens">
+        DELETE FROM refresh_tokens WHERE expiry_date &lt; CURRENT_TIMESTAMP
+    </delete>
+
+</mapper>
+

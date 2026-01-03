@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 @Mapper
-public interface UserMapperDb {
+public interface UserMapper {
 
     List<User> getAllUser();
 
@@ -18,8 +18,11 @@ public interface UserMapperDb {
 
     void deleteUser(@Param("id") Long id);
 
-    boolean isUsernameExist(@Param("username") String username);
-
     boolean isEmailExist(@Param("email") String email);
 
+    List<User> searchUsers(@Param("search") String search,
+            @Param("offset") int offset,
+            @Param("limit") int limit);
+
+    long countUsers(@Param("search") String search);
 }

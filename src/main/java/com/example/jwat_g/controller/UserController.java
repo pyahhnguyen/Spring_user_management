@@ -1,12 +1,13 @@
 package com.example.jwat_g.controller;
 
-import com.example.jwat_g.model.User;
+import com.example.jwat_g.dto.response.ApiResponse;
 import com.example.jwat_g.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import com.example.jwat_g.dto.response.UserResponse;
+import com.example.jwat_g.dto.response.PagedResponse;
 import com.example.jwat_g.dto.request.UserCreateRequest;
 import com.example.jwat_g.dto.request.UserUpdateRequest;
 
@@ -17,38 +18,38 @@ public class UserController {
 
     private final UserService userService;
 
-    //  GET /api/users
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<ApiResponse<PagedResponse<UserResponse>>> getAllUsers(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        PagedResponse<UserResponse> users = userService.searchUsers(search, page, size);
+        return ResponseEntity.ok(ApiResponse.success(users));
     }
-    // GET /api/users/{id}
+
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
-
+    public ResponseEntity<ApiResponse<UserResponse>> getUserById(@PathVariable Long id) {
+        UserResponse user = userService.getUserById(id);
+        return ResponseEntity.ok(ApiResponse.success(user));
     }
-    // POST /api/users
+
     @PostMapping
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserCreateRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> createUser(@RequestBody UserCreateRequest request) {
         UserResponse response = userService.createUser(request);
-
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success("User created successfully", response));
     }
 
-
-    // PATCH /api/users/{id}
     @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable Long id, @RequestBody UserUpdateRequest request) {
+    public ResponseEntity<ApiResponse<UserResponse>> updateUser(@PathVariable Long id,
+            @RequestBody UserUpdateRequest request) {
         UserResponse response = userService.updateUser(id, request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(ApiResponse.success("User updated successfully", response));
     }
 
-    // DELETE /api/users/{id}
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
-        return ResponseEntity.ok("User deleted successfully with ID: " + id);
+        return ResponseEntity.ok(ApiResponse.success("User deleted successfully"));
     }
-
 }

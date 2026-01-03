@@ -1,4 +1,4 @@
-package com.example.jwat_g.dto.mapper;
+package com.example.jwat_g.converter;
 
 import org.springframework.stereotype.Component;
 import com.example.jwat_g.model.User;
@@ -6,27 +6,22 @@ import com.example.jwat_g.dto.request.UserCreateRequest;
 import com.example.jwat_g.dto.response.UserResponse;
 import com.example.jwat_g.dto.request.UserUpdateRequest;
 
-
 @Component
-public class UserMapper {
-    // convert user request to entity
+public class UserConverter {
 
     public User toEntity(UserCreateRequest request) {
         User user = new User();
-        user.setUsername(request.getUsername());
-        user.setEmail(request.getEmail());
         user.setFullName(request.getFullName());
+        user.setEmail(request.getEmail());
         user.setPhoneNumber(request.getPhoneNumber());
         return user;
     }
 
-
     public UserResponse toResponse(User user) {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
-        response.setUsername(user.getUsername());
-        response.setEmail(user.getEmail());
         response.setFullName(user.getFullName());
+        response.setEmail(user.getEmail());
         response.setPhoneNumber(user.getPhoneNumber());
         response.setStatus(user.getStatus());
         response.setCreatedAt(user.getCreatedAt());

@@ -3,8 +3,7 @@ package com.example.jwat_g.dto.request;
 import lombok.Data;
 
 @Data
-public class UserCreateRequest {
-    private String fullName;
+public class LoginRequest {
     private String email;
-    private String phoneNumber;
+    private String password;
 }

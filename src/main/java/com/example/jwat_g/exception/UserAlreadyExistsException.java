@@ -1,8 +1,5 @@
 package com.example.jwat_g.exception;
 
-/**
- * Exception khi User đã tồn tại (duplicate username/email)
- */
 public class UserAlreadyExistsException extends RuntimeException {
     
     public UserAlreadyExistsException(String message) {
